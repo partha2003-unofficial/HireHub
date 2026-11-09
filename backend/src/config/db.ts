@@ -5,5 +5,5 @@ export async function connectWithDatabase(url: string) {
         .then(() => {
             console.log('database is connected successfully')
         })
-        .catch((error) => { console.log('database is not connected , the error is ', error.errors.message) })
+        .catch((error) => { console.log('database is not connected , the error is ', error.message) })
 }

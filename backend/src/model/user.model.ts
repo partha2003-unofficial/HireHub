@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        seleted: false
+        selected: false
     },
     role: {
         type: String,
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
         enum: ["EMPLOYER", "CANDIDATE"]
     },
     isVarified: {
-        type: String,
+        type: Boolean,
         default: false
     },
     isActive: {
