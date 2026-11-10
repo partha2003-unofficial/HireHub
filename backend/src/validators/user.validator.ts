@@ -11,3 +11,8 @@ export const userValidation = z.object({
     password: z.string(),
     role: z.enum(["EMPLOYER", "CANDIDATE"])
 })
+
+export const loginValidation = z.object({
+    email:z.email(),
+    password:z.string()
+})

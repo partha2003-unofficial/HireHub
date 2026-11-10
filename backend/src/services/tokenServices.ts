@@ -2,7 +2,7 @@ import env from 'dotenv'
 env.config()
 import jwt from 'jsonwebtoken';
 import type { Types } from 'mongoose';
-import type { AuthUser } from '../../types/express.js';
+import type { AuthUser } from '../types/express.js';
 
 export function createToken(user: { _id: Types.ObjectId }) {
     const payload = {
