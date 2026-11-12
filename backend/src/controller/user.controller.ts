@@ -76,6 +76,9 @@ export async function userLogin(request: Request, response: Response): Promise<R
         const token = createToken(user)
         response.cookie("user_Authentication_token", token);
 
+        user.isActive = user.isVarified = true; //chained assignment
+        await user.save();
+
         return response.status(200).json({
             message: "user is validate",
             token: token
@@ -87,16 +90,28 @@ export async function userLogin(request: Request, response: Response): Promise<R
     }
 }
 
-export function logoutUser(request: Request, response: Response) {
+export async function logoutUser(request: Request, response: Response) {
 
     try {
+        /*error handling*/
         const deleteToken = response.removeHeader || response.clearCookie('user_Authentication_token') || null;
-        if (!deleteToken) {
+        if (deleteToken == null) {
             return response.status(400).json({
                 message: 'token is not deleted'
             })
         }
 
+        const user = await userModel.findById(request.user?.id);
+        if (user === null) {
+            return response.status(400).json({
+                message: "user is not founded"
+            })
+        }
+
+        /*execution*/
+        user.isActive = false;
+        await user.save();
+        
         return response.status(200).json({
             message: 'user is logout successfully',
             token: deleteToken
