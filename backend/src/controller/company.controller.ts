@@ -19,15 +19,6 @@ export async function createCompany(request: Request, response: Response): Promi
                 message: 'user is did not found !'
             })
         }
-        if (
-            user.role !== "EMPLOYER" ||
-            user.isVarified === false ||
-            user.isActive === false
-        ) {
-            return response.status(400).json({
-                message: 'this user is not validate'
-            })
-        }
 
         /*execution*/
         const company = await companyModel.create({
@@ -116,13 +107,6 @@ export async function getCompany(request: Request, response: Response): Promise<
         if (!company) {
             return response.status(400).json({
                 message: 'company not founded'
-            })
-        }
-
-        if (!company?.owner.equals(request.user?.id)) {
-            return response.status(400).json({
-                message: 'this user not created this company',
-                userId: request.user?.id
             })
         }
 
