@@ -56,8 +56,8 @@ export async function updateCompany(request: Request, response: Response): Promi
         }
 
         const company = await companyModel.findById(companyId);
-        if (company === undefined) {
-            response.status(400).json({
+        if (company === null) {
+           return response.status(400).json({
                 message: 'company is not fond !',
                 companyId: companyId
             })
@@ -146,7 +146,11 @@ export async function deleteCompany(request: Request, response: Response): Promi
         }
 
         /*execution*/
-        await company.deleteOne({ _id: companyId });
+        const deleteCompany = await company.deleteOne({ _id: companyId });
+        if(deleteCompany === null){
+            return response.status(400).json({message:'company did not deleted'})
+        }
+        
         return response.status(200).json(
             {
                 message: 'company was deletad successfully',
