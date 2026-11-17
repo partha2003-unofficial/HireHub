@@ -23,7 +23,7 @@ export const createJobValidator = z.object({
     salary: z.object({
         min: z.number(),
         max: z.number(),
-        currency: z.string().toUpperCase(),
+        currency: z.string(),
         isNegotiable: z.boolean()
     }),
     location: z.object({
@@ -37,7 +37,7 @@ export const createJobValidator = z.object({
         "HYBRID"
     ]).default('ONSITE'),
     vacancies: z.number(),
-    applicationDeadline: z.date(),
+    applicationDeadline: z.coerce.date(),
     status: z.enum([
         "OPEN",
         "CLOSED",
@@ -68,7 +68,7 @@ export const updateJobValidator = z.object({
     salary: z.object({
         min: z.number(),
         max: z.number(),
-        currency: z.string().toUpperCase(),
+        currency: z.string(),
         isNegotiable: z.boolean()
     }).optional(),
     location: z.object({
@@ -82,7 +82,7 @@ export const updateJobValidator = z.object({
         "HYBRID"
     ]).optional(),
     vacancies: z.number().optional(),
-    applicationDeadline: z.date().optional(),
+    applicationDeadline: z.coerce.date().optional(),
     status: z.enum([
         "OPEN",
         "CLOSED",

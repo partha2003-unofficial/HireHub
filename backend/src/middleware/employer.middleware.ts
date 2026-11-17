@@ -7,7 +7,7 @@ export async function employerAuthenticationMiddleware(request: Request, respons
         return next();
     } else {
         return response.status(400).json({
-            message: 'only EMPLOYER can create do this',
+            message: 'only EMPLOYER can do this',
             userId: request.user?.id
         })
     }

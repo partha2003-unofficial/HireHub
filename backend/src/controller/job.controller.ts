@@ -9,7 +9,10 @@ export async function createJob(request: Request, response: Response): Promise<R
         /*error handling */
         const { data, error } = createJobValidator.safeParse(request.body ?? null)
         if (error) {
-            return response.status(400).json({ message: 'please enter correct data' })
+            return response.status(400).json({
+                message: 'please enter correct data',
+                error: error.message
+            })
         }
 
         const company = await companyModel.findOne({ owner: request.user?.id || null })
@@ -17,7 +20,11 @@ export async function createJob(request: Request, response: Response): Promise<R
             return response.status(400).json({ message: 'this owner has no company so cannot create job' })
         }
 
-        const createJob = await jobModel.create({ ...data })
+        const createJob = await jobModel.create({
+            ...data,
+            employer: new Types.ObjectId(request.user?.id) || null,
+            company: company._id
+        })
 
         if (createJob === null) {
             return response.status(400).json({ message: 'job did not created!' })
@@ -71,7 +78,7 @@ export async function updateJob(request: Request, response: Response): Promise<R
             return response.status(400).json({ message: 'did not found job by this id ' })
         }
 
-        if (job.employer !== new Types.ObjectId(request.user?.id)) {
+        if (job.employer.toString() !== request.user?.id) {
             return response.status(400).json({ message: 'this employer is did not create this job , so he did not modify this job' })
         }
 
@@ -101,7 +108,7 @@ export async function deleteJob(request: Request, response: Response): Promise<R
             return response.status(400).json({ message: 'did not found job by this id ' })
         }
 
-        if (job.employer !== new Types.ObjectId(request.user?.id)) {
+        if (job.employer.toString() !== request.user?.id) {
             return response.status(400).json({ message: 'this employer is did not create this job , so he did not delete this job' })
         }
 
@@ -134,7 +141,7 @@ export async function closeJob(request: Request, response: Response): Promise<Re
             return response.status(400).json({ message: 'did not found job by this id ' })
         }
 
-        if (job.employer !== new Types.ObjectId(request.user?.id)) {
+        if (job.employer.toString() !== request.user?.id) {
             return response.status(400).json({ message: 'this employer is did not create this job , so he did not close this job' })
         }
 
@@ -160,14 +167,9 @@ export async function closeJob(request: Request, response: Response): Promise<Re
 
 export async function getCreatedJobByEmployer(request: Request, response: Response): Promise<Response> {
     try {
-        /*error handling */
-        const jobId = request.params?.jobid || null;
-        if (jobId === null) {
-            return response.status(400).json({ message: 'did not give jobId' })
-        }
-
         /*execution */
         const jobs = await jobModel.find({ employer: request.user?.id || null })
+
         if (jobs.length === 0) {
             return response.status(400).json({ message: 'there are no jobs' })
         }
@@ -177,6 +179,6 @@ export async function getCreatedJobByEmployer(request: Request, response: Respon
             jobs: jobs
         })
     } catch (error) {
-        return response.status(500).json({ message: 'internal server error' })
+        return response.status(500).json({ message: 'internal server error aosdfsnof' })
     }
 }

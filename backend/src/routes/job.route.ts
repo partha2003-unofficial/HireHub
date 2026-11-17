@@ -5,13 +5,13 @@ import { closeJob, createJob, deleteJob, getCreatedJobByEmployer, getJob, update
 const jobRouter = Router();
 
 jobRouter.post('/create', employerAuthenticationMiddleware, createJob);
+jobRouter.get('/jobs', employerAuthenticationMiddleware, getCreatedJobByEmployer)
 
+jobRouter.patch('/:jobid/close', employerAuthenticationMiddleware, closeJob)
 jobRouter.route('/:jobid')
     .get(getJob)
     .patch(employerAuthenticationMiddleware, updateJob)
     .delete(employerAuthenticationMiddleware, deleteJob)
 
-jobRouter.patch('/:jobid/close', employerAuthenticationMiddleware, closeJob)
-jobRouter.get('/employer', employerAuthenticationMiddleware, getCreatedJobByEmployer)
 
 export default jobRouter;
