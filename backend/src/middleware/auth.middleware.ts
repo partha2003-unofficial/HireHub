@@ -16,10 +16,14 @@ export async function authenticaitonUser(request: Request, response: Response, n
         const vaidateToken = verifyToken(token);
         const findUser = await userModel.findById(vaidateToken.id);
 
-        if (findUser === null || findUser.isActive === false) {
+        if (findUser === null ||
+            findUser.isActive === false ||
+            !["EMPLOYER", "CANDIDATE"].includes(findUser?.role)) {
+
             return response.status(400).json({
                 message: 'user is not validate'
             })
+
         }
 
         request.user = vaidateToken;
